@@ -9,81 +9,75 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
-    
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+class GameScene: SKScene, SKPhysicsContactDelegate {
+
+    var apple = SKSpriteNode()
+    var snakeSections: [SKSpriteNode] = []
     
     override func didMove(to view: SKView) {
+        self.physicsWorld.contactDelegate = self
+        apple = self.childNode(withName: "Apple") as! SKSpriteNode
+        snakeSections.append(self.childNode(withName: "Snake") as! SKSpriteNode)
+
+        initSwipeGestures(view)
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
+        for _ in 0...5 {
+            let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
+            newSnake.position = CGPoint(x: snakeSections[0].position.x, y: snakeSections.last!.position.y - 50)
             
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-    }
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+            newSnake.color = .green
+            
+            snakeSections.append(newSnake)
+            self.addChild(newSnake)
         }
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        let border = SKPhysicsBody(edgeLoopFrom: self.frame)
+        border.categoryBitMask = 2
+        border.isDynamic = false
+        border.affectedByGravity = false
+        self.physicsBody = border
+        
+        snakeSections[0].physicsBody?.categoryBitMask = 4
+        snakeSections[0].physicsBody?.contactTestBitMask = 2
+        snakeSections[0].physicsBody?.collisionBitMask = 0
+        snakeSections[0].physicsBody?.isDynamic = true
+        
+        view.showsPhysics = true
     }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
+ 
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        
+        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 1, y: snakeSections[0].position.y)
     }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        print("collision detected")
+    }
+    
+    func initSwipeGestures(_ view: SKView) {
+        let swipeRight : UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.swipedRight))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+        let swipeLeft : UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.swipedLeft))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
+        let swipeUp : UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.swipedUp))
+        swipeUp.direction = .up
+        view.addGestureRecognizer(swipeUp)
+        let swipeDown : UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.swipedDown))
+        swipeDown.direction = .down
+        view.addGestureRecognizer(swipeDown)
+    }
+    
+    @objc func swipedRight(sender: UISwipeGestureRecognizer) {
+        
+    }
+    @objc func swipedLeft(sender: UISwipeGestureRecognizer) {
+    }
+    @objc func swipedUp(sender: UISwipeGestureRecognizer) {
+    }
+    @objc func swipedDown(sender: UISwipeGestureRecognizer) {
+    }
+    
 }
