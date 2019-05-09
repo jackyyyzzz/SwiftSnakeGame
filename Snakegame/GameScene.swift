@@ -19,6 +19,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
         apple = self.childNode(withName: "Apple") as! SKSpriteNode
+        apple.name = "Apple"
+        
         snakeSections.append(self.childNode(withName: "Snake") as! SKSpriteNode)
 
         initSwipeGestures(view)
@@ -43,6 +45,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         snakeSections[0].physicsBody?.collisionBitMask = 0
         snakeSections[0].physicsBody?.isDynamic = true
         
+        apple.physicsBody?.categoryBitMask = 2
+        apple.physicsBody?.contactTestBitMask = 1
+        apple.physicsBody?.isDynamic = true
+        
         view.showsPhysics = true
         print(snakeSections[0].position)
     }
@@ -51,18 +57,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         
         if !hasContacted {
+//            for i in snakeSections {
+//                i.position = CGPoint(x: i.position.x - 2 , y: i.position.y)
+//            }
             snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 2, y: snakeSections[0].position.y)
+            
         } else {
-            snakeSections[0].position = CGPoint(x: frame.maxX, y: snakeSections[0].position.y)
+//            for i in snakeSections {
+//                i.position = CGPoint(x: frame.maxX , y: i.position.y)
+//            }
+            hasEaten()
+            snakeSections[0].position = CGPoint(x: frame.maxX, y: 123)
+
             hasContacted = false
         }
-        print(snakeSections[0].position)
+        
+    
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
         print("collision detected")
         
-        hasContacted = true
+        if (contact.bodyA.node!.name == "Apple" || contact.bodyB.node!.name == "Apple") {
+
+            hasContacted = true
+        }
+        
+    }
+    
+    func hasEaten () {
+        let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
+        newSnake.position = CGPoint(x: snakeSections.last!.position.x, y: snakeSections.last!.position.y - 50)
+        
+        newSnake.color = .green
+        apple.position = CGPoint (x: 123, y: 123)
+        snakeSections.append(newSnake)
+        self.addChild(newSnake)
     }
     
     func initSwipeGestures(_ view: SKView) {
