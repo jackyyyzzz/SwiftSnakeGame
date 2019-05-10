@@ -11,8 +11,10 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
+    
     var apple = SKSpriteNode()
     var snakeSections: [SKSpriteNode] = []
+    let gameFrame = CGRect(x: -250, y: -480, width: 500, height: 980)
     
     var hasContacted = false
     var addATail = false
@@ -28,7 +30,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         initSwipeGestures(view)
         
-        for _ in 0...8 {
+        for _ in 0...5 {
             let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
             newSnake.position = CGPoint(x: snakeSections.last!.position.x - 1, y: snakeSections.last!.position.y)
 
@@ -38,7 +40,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.addChild(newSnake)
         }
         
-        let border = SKPhysicsBody(edgeLoopFrom: self.frame)
+
+        
+        let border = SKPhysicsBody(edgeLoopFrom: gameFrame)
         border.categoryBitMask = 7 // 0111
         border.isDynamic = false
         self.physicsBody = border
@@ -63,24 +67,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
 
         if !hasContacted {
-//            if lastSwiped == "right" {
-//                tailFollow()
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 3, y: snakeSections[0].position.y)
-//            }
-//            else if lastSwiped == "left" {
-//                tailFollow()
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 3, y: snakeSections[0].position.y)
-//
-//            }
-//            else if lastSwiped == "up" {
-//                tailFollow()
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 3)
-//
-//            }
-//            else if lastSwiped == "down" {
-//                tailFollow()
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 3)
-//            }
             switch lastSwiped {
             case "right":
                 tailFollow()
@@ -97,15 +83,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             default:
                 tailFollow()
             }
-        } else {
+        }
+        else {
             //when contact wall, appear on the other side of the screen
+            switch lastSwiped {
+            case "right":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: gameFrame.minX + 30, y: snakeSections[0].position.y)
 
+            case "left":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: gameFrame.maxX - 30, y: snakeSections[0].position.y)
+
+            case "up":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: gameFrame.minY + 30)
+
+            case "down":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: gameFrame.maxY - 30)
+            default:
+                tailFollow()
+            }
             hasContacted = false
         }
         
         if !addATail {
             return
-            
         }
         else {
             hasEaten()
@@ -127,6 +131,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         else if (contact.bodyA.accessibilityLabel == "Wall" || contact.bodyB.accessibilityLabel == "Wall") {
             hasContacted = true
             print("Walled")
+            print(snakeSections[0])
         }
     }
     
@@ -135,7 +140,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         newSnake.position = CGPoint(x: snakeSections.last!.position.x, y: snakeSections.last!.position.y)
         
         newSnake.color = .green
-        apple.position = CGPoint(x:Int(arc4random()%320),y:Int(arc4random()%640))
+        apple.position = CGPoint(x:Int(arc4random()%250),y:Int(arc4random()%480))
         snakeSections.append(newSnake)
         self.addChild(newSnake)
     }
