@@ -23,22 +23,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
         apple = self.childNode(withName: "Apple") as! SKSpriteNode
+        apple.physicsBody?.categoryBitMask = 2
+        apple.physicsBody?.contactTestBitMask = 1
+        apple.physicsBody?.isDynamic = true
         apple.name = "Apple"
         
         snakeSections.append(self.childNode(withName: "Snake") as! SKSpriteNode)
-        snakeSections[0].name = "Snake Head"
-
-        initSwipeGestures(view)
-        
         for _ in 0...5 {
             let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
             newSnake.position = CGPoint(x: snakeSections.last!.position.x - 1, y: snakeSections.last!.position.y)
-
+            
             newSnake.color = .green
-
+            
             snakeSections.append(newSnake)
             self.addChild(newSnake)
         }
+        
+        snakeSections[0].name = "Snake Head"
+
+        initSwipeGestures(view)
         
 
         
@@ -46,16 +49,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         border.categoryBitMask = 7 // 0111
         border.isDynamic = false
         self.physicsBody = border
-        border.accessibilityLabel = "Wall"
+        self.physicsBody?.node?.name = "Wall"
         
         snakeSections[0].physicsBody?.categoryBitMask = 1 // 0001
         snakeSections[0].physicsBody?.contactTestBitMask = 15 // 1111
         snakeSections[0].physicsBody?.collisionBitMask = 0
         snakeSections[0].physicsBody?.isDynamic = true
-        
-        apple.physicsBody?.categoryBitMask = 2
-        apple.physicsBody?.contactTestBitMask = 1
-        apple.physicsBody?.isDynamic = true
         
         view.showsPhysics = true
         print(snakeSections.count)
@@ -66,6 +65,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
 
+        print(currentTime)
         if !hasContacted {
             switch lastSwiped {
             case "right":
@@ -128,16 +128,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addATail = true
             print("apple eaten")
         }
-        else if (contact.bodyA.accessibilityLabel == "Wall" || contact.bodyB.accessibilityLabel == "Wall") {
-            hasContacted = true
-            print("Walled")
-            print(snakeSections[0])
+        else if (contact.bodyA.node!.name == "Wall" || contact.bodyB.node!.name == "Wall") {
+            if (contact.bodyA.node!.name == "Snake Head" || contact.bodyB.node!.name == "Snake Head") {
+                hasContacted = true
+                print("Walled")
+            }
         }
     }
     
     func hasEaten () {
         let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
         newSnake.position = CGPoint(x: snakeSections.last!.position.x, y: snakeSections.last!.position.y)
+        newSnake.name = "Snake Tail"
         
         newSnake.color = .green
         apple.position = CGPoint(x:Int(arc4random()%250),y:Int(arc4random()%480))
