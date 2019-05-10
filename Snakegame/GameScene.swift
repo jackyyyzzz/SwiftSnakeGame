@@ -16,7 +16,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var hasContacted = false
     var addATail = false
-    var didSwiped = false
     var lastSwiped = ""
     
     override func didMove(to view: SKView) {
@@ -29,9 +28,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         initSwipeGestures(view)
         
-        for _ in 0...1 {
+        for _ in 0...8 {
             let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
-            newSnake.position = CGPoint(x: snakeSections.last!.position.x - 30, y: snakeSections.last!.position.y)
+            newSnake.position = CGPoint(x: snakeSections.last!.position.x - 1, y: snakeSections.last!.position.y)
 
             newSnake.color = .green
 
@@ -63,17 +62,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
 
-        
         if !hasContacted {
-//            for i in snakeSections {
-//                i.position = CGPoint(x: i.position.x - 2 , y: i.position.y)
+//            if lastSwiped == "right" {
+//                tailFollow()
+//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 3, y: snakeSections[0].position.y)
 //            }
-
+//            else if lastSwiped == "left" {
+//                tailFollow()
+//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 3, y: snakeSections[0].position.y)
+//
+//            }
+//            else if lastSwiped == "up" {
+//                tailFollow()
+//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 3)
+//
+//            }
+//            else if lastSwiped == "down" {
+//                tailFollow()
+//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 3)
+//            }
+            switch lastSwiped {
+            case "right":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 3, y: snakeSections[0].position.y)
+            case "left":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 3, y: snakeSections[0].position.y)
+            case "up":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 3)
+            case "down":
+                tailFollow()
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 3)
+            default:
+                tailFollow()
+            }
         } else {
-//            for i in snakeSections {
-//                i.position = CGPoint(x: frame.maxX , y: i.position.y)
-//            }
-            snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: 640)
+            //when contact wall, appear on the other side of the screen
 
             hasContacted = false
         }
@@ -87,38 +112,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addATail = false
         }
         
-//        if didSwiped{
-//            if lastSwiped == "right" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 30, y: snakeSections[0].position.y)
-//            }
-//            if lastSwiped == "left" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 30, y: snakeSections[0].position.y)
-//                
-//            }
-//            if lastSwiped == "up" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 30)
-//                
-//            }
-//            if lastSwiped == "down" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 30)
-//            }
-//        }
-//        else {
-//            if lastSwiped == "right" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 30, y: snakeSections[0].position.y)
-//            }
-//            if lastSwiped == "left" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 30, y: snakeSections[0].position.y)
-//                
-//            }
-//            if lastSwiped == "up" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 30)
-//                
-//            }
-//            if lastSwiped == "down" {
-//                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 30)
-//            }
-//        }
+
         
  
         // use (320, 640) for snake head reappear
@@ -126,8 +120,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-
-        
         if (contact.bodyA.node!.name == "Apple" || contact.bodyB.node!.name == "Apple") {
             addATail = true
             print("apple eaten")
@@ -136,8 +128,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             hasContacted = true
             print("Walled")
         }
-        
-        
     }
     
     func hasEaten () {
@@ -167,48 +157,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func swipedRight(sender: UISwipeGestureRecognizer) {
-        for i in (1...snakeSections.count - 1).reversed() {
-            snakeSections[i].position = CGPoint(x: snakeSections[i-1].position.x, y: snakeSections[i-1].position.y)
-        }
+        tailFollow()
         
-        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 30, y: snakeSections[0].position.y)
+        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 1, y: snakeSections[0].position.y)
         
-        didSwiped = true
         lastSwiped = "right"
         print("right")
     }
     @objc func swipedLeft(sender: UISwipeGestureRecognizer) {
-        for i in (1...snakeSections.count - 1).reversed() {
-            snakeSections[i].position = CGPoint(x: snakeSections[i-1].position.x, y: snakeSections[i-1].position.y)
-        }
+        tailFollow()
         
-        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 30, y: snakeSections[0].position.y)
+        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 1, y: snakeSections[0].position.y)
         
-        didSwiped = true
         lastSwiped = "left"
         print("left")
     }
     @objc func swipedUp(sender: UISwipeGestureRecognizer) {
-        for i in (1...snakeSections.count - 1).reversed() {
-            snakeSections[i].position = CGPoint(x: snakeSections[i-1].position.x, y: snakeSections[i-1].position.y)
-        }
+        tailFollow()
         
-        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 30 )
+        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 1)
         
-        didSwiped = true
         lastSwiped = "up"
         print("up")
     }
     @objc func swipedDown(sender: UISwipeGestureRecognizer) {
+        tailFollow()
+        
+        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 1 )
+
+        lastSwiped = "down"
+        print("down")
+    }
+    
+    
+    func tailFollow() {
         for i in (1...snakeSections.count - 1).reversed() {
             snakeSections[i].position = CGPoint(x: snakeSections[i-1].position.x, y: snakeSections[i-1].position.y)
         }
-        
-        snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 30 )
-        
-        didSwiped = true
-        lastSwiped = "down"
-        print("down")
     }
     
 }
