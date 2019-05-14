@@ -20,6 +20,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var addATail = false
     var lastSwiped = ""
     
+    var previousTime: Double = 0
+    
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
         apple = self.childNode(withName: "Apple") as! SKSpriteNode
@@ -28,22 +30,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         apple.physicsBody?.isDynamic = true
         apple.name = "Apple"
         
-        snakeSections.append(self.childNode(withName: "Snake") as! SKSpriteNode)
-        for _ in 0...5 {
-            let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
-            newSnake.position = CGPoint(x: snakeSections.last!.position.x - 1, y: snakeSections.last!.position.y)
-            
-            newSnake.color = .green
-            
-            snakeSections.append(newSnake)
-            self.addChild(newSnake)
-        }
-        
-        snakeSections[0].name = "Snake Head"
+        newSnake()
 
         initSwipeGestures(view)
         
-
         
         let border = SKPhysicsBody(edgeLoopFrom: gameFrame)
         border.categoryBitMask = 7 // 0111
@@ -51,60 +41,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsBody = border
         self.physicsBody?.node?.name = "Wall"
         
-        snakeSections[0].physicsBody?.categoryBitMask = 1 // 0001
-        snakeSections[0].physicsBody?.contactTestBitMask = 15 // 1111
-        snakeSections[0].physicsBody?.collisionBitMask = 0
-        snakeSections[0].physicsBody?.isDynamic = true
-        
         view.showsPhysics = true
         print(snakeSections.count)
-        
-        
     }
  
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-
-        print(currentTime)
+        
+        
+        let speed = 150.0
+        let delta = currentTime - previousTime
+        previousTime = currentTime
+        
         if !hasContacted {
             switch lastSwiped {
             case "right":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 3, y: snakeSections[0].position.y)
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + CGFloat(speed * delta), y: snakeSections[0].position.y)
             case "left":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 3, y: snakeSections[0].position.y)
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - CGFloat(speed * delta), y: snakeSections[0].position.y)
             case "up":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 3)
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + CGFloat(speed * delta))
             case "down":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 3)
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - CGFloat(speed * delta))
             default:
                 tailFollow()
             }
         }
         else {
-            //when contact wall, appear on the other side of the screen
-            switch lastSwiped {
-            case "right":
-                tailFollow()
-                snakeSections[0].position = CGPoint(x: gameFrame.minX + 30, y: snakeSections[0].position.y)
+            //when contact wall/itself, terminates game and restart
 
-            case "left":
-                tailFollow()
-                snakeSections[0].position = CGPoint(x: gameFrame.maxX - 30, y: snakeSections[0].position.y)
-
-            case "up":
-                tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: gameFrame.minY + 30)
-
-            case "down":
-                tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: gameFrame.maxY - 30)
-            default:
-                tailFollow()
-            }
+            restartGame()
+            
+            
             hasContacted = false
         }
         
@@ -134,15 +106,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 print("Walled")
             }
         }
+        else if (contact.bodyA.node!.name == "Snake Tail" && contact.bodyB.node!.name == "Snake Tail") {
+            if (contact.bodyB.node!.name == "Snake Head" && contact.bodyA.node!.name == "Snake Head") {
+                hasContacted = true
+                print("Ate itself")
+            }
+        }
     }
     
     func hasEaten () {
         let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
-        newSnake.position = CGPoint(x: snakeSections.last!.position.x, y: snakeSections.last!.position.y)
         newSnake.name = "Snake Tail"
+        newSnake.position = CGPoint(x: snakeSections.last!.position.x, y: snakeSections.last!.position.y)
+
         
         newSnake.color = .green
-        apple.position = CGPoint(x:Int(arc4random()%250),y:Int(arc4random()%480))
+        
+        let xRand = CGFloat.random(in: -250...250)
+        let yRand = CGFloat.random(in: -480...480)
+        apple.position = CGPoint(x: xRand, y: yRand)
         snakeSections.append(newSnake)
         self.addChild(newSnake)
     }
@@ -164,32 +146,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func swipedRight(sender: UISwipeGestureRecognizer) {
+        if lastSwiped == "left" {
+            return
+        }
+        
         tailFollow()
-        
         snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 1, y: snakeSections[0].position.y)
-        
         lastSwiped = "right"
         print("right")
     }
     @objc func swipedLeft(sender: UISwipeGestureRecognizer) {
-        tailFollow()
+        if lastSwiped == "right" {
+            return
+        }
         
+        tailFollow()
         snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 1, y: snakeSections[0].position.y)
         
         lastSwiped = "left"
         print("left")
     }
     @objc func swipedUp(sender: UISwipeGestureRecognizer) {
-        tailFollow()
+        if lastSwiped == "down" {
+            return
+        }
         
+        tailFollow()
         snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 1)
         
         lastSwiped = "up"
         print("up")
     }
     @objc func swipedDown(sender: UISwipeGestureRecognizer) {
-        tailFollow()
+        if lastSwiped == "up" {
+            return
+        }
         
+        tailFollow()
         snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 1 )
 
         lastSwiped = "down"
@@ -203,4 +196,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func restartGame() {
+
+        self.removeChildren(in: snakeSections)
+        lastSwiped = ""
+        newSnake()
+        apple.position = CGPoint(x: 0, y: 0)
+    }
+    
+    func newSnake() {
+        snakeSections = []
+        snakeSections.append(self.childNode(withName: "Snake")!.copy() as! SKSpriteNode)
+        self.addChild(snakeSections[0])
+        
+        for _ in 0...5 {
+            let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
+            newSnake.position = CGPoint(x: snakeSections.last!.position.x - 1, y: snakeSections.last!.position.y)
+            
+            newSnake.color = .green
+            
+            snakeSections.append(newSnake)
+            self.addChild(newSnake)
+        }
+        
+        snakeSections[0].name = "Snake Head"
+        snakeSections[0].color = .white
+        snakeSections[0].physicsBody?.categoryBitMask = 1 // 0001
+        snakeSections[0].physicsBody?.contactTestBitMask = 15 // 1111
+        snakeSections[0].physicsBody?.isDynamic = true
+    }
 }
