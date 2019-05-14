@@ -235,7 +235,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         snakeSections.append(self.childNode(withName: "Snake")!.copy() as! SKSpriteNode)
         self.addChild(snakeSections[0])
         
-        for _ in 0...6 {
+        for _ in 0...10 {
             let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
             newSnake.position = CGPoint(x: snakeSections.last!.position.x - 1, y: snakeSections.last!.position.y)
             
