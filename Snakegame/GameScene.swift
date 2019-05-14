@@ -61,7 +61,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         
         
-        let speed = 150.0
+        let speed = 300.0
         let delta = currentTime - previousTime
         previousTime = currentTime
         
@@ -85,7 +85,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         else {
             //when contact wall/itself, terminates game and restart
-
             restartGame()
             hasContacted = false
         }
@@ -116,27 +115,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 print("Walled")
             }
         }
-        else if (contact.bodyA.node!.name == "Snake Tail" && contact.bodyB.node!.name == "Snake Tail") {
-            if (contact.bodyB.node!.name == "Snake Head" && contact.bodyA.node!.name == "Snake Head") {
+        else if (contact.bodyA.node!.name == "Snake Tail" || contact.bodyB.node!.name == "Snake Tail") {
+            if (contact.bodyB.node!.name == "Snake Head" || contact.bodyA.node!.name == "Snake Head") {
                 hasContacted = true
                 print("Ate itself")
             }
         }
+        print(contact.bodyA)
+        print(contact.bodyB)
     }
     
     func hasEaten () {
-        let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
-        newSnake.name = "Snake Tail"
-        newSnake.position = CGPoint(x: snakeSections.last!.position.x, y: snakeSections.last!.position.y)
-
+        snakeSections.last!.physicsBody?.categoryBitMask = 0
         
+        let newSnake = (snakeSections.last!.copy() as! SKSpriteNode)
+        newSnake.position = CGPoint(x: snakeSections.last!.position.x, y: snakeSections.last!.position.y)
         newSnake.color = .green
         
-        let xRand = CGFloat.random(in: -250...250)
-        let yRand = CGFloat.random(in: -480...480)
+        
+        let xRand = CGFloat.random(in: -229...229)
+        let yRand = CGFloat.random(in: -449...449)
         apple!.position = CGPoint(x: xRand, y: yRand)
         snakeSections.append(newSnake)
         self.addChild(newSnake)
+        
+        snakeSections.last!.name = "Snake Tail"
+        snakeSections.last!.physicsBody?.categoryBitMask = 2
         
         currentScores = currentScores + 1
         currentScore?.text = String(currentScores)
@@ -231,7 +235,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         snakeSections.append(self.childNode(withName: "Snake")!.copy() as! SKSpriteNode)
         self.addChild(snakeSections[0])
         
-        for _ in 0...5 {
+        for _ in 0...6 {
             let newSnake = (snakeSections[0].copy() as! SKSpriteNode)
             newSnake.position = CGPoint(x: snakeSections.last!.position.x - 1, y: snakeSections.last!.position.y)
             
@@ -244,8 +248,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         snakeSections[0].name = "Snake Head"
         snakeSections[0].color = .white
         snakeSections[0].physicsBody?.categoryBitMask = 1 // 0001
-        snakeSections[0].physicsBody?.contactTestBitMask = 15 // 1111
         snakeSections[0].physicsBody?.isDynamic = true
+
     }
     
 }
