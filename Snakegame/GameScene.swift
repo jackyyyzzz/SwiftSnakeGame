@@ -12,7 +12,7 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
     
-    var apple = SKSpriteNode()
+    var apple: SKSpriteNode?
     var snakeSections: [SKSpriteNode] = []
     let gameFrame = CGRect(x: -250, y: -480, width: 500, height: 980)
     
@@ -20,18 +20,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var addATail = false
     var lastSwiped = ""
     
+    var currentScore: SKLabelNode?
+    var highScore: SKLabelNode?
+    
     var previousTime: Double = 0
+    
+    var currentScores: Int = 0
+    var highScores: Int = 0
     
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
-        apple = self.childNode(withName: "Apple") as! SKSpriteNode
-        apple.physicsBody?.categoryBitMask = 2
-        apple.physicsBody?.contactTestBitMask = 1
-        apple.physicsBody?.isDynamic = true
-        apple.name = "Apple"
+        apple = self.childNode(withName: "Apple") as? SKSpriteNode
+        apple!.physicsBody?.categoryBitMask = 2
+        apple!.physicsBody?.contactTestBitMask = 1
+        apple!.physicsBody?.isDynamic = true
+        apple!.name = "Apple"
+        
+        currentScore = self.childNode(withName: "currentScore") as? SKLabelNode
+        highScore = self.childNode(withName: "highScore") as? SKLabelNode
+        
+        
+        currentScores = Int(currentScore!.text!)!
+        highScores = Int(highScore!.text!)!
         
         newSnake()
-
         initSwipeGestures(view)
         
         
@@ -75,8 +87,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //when contact wall/itself, terminates game and restart
 
             restartGame()
-            
-            
             hasContacted = false
         }
         
@@ -124,9 +134,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let xRand = CGFloat.random(in: -250...250)
         let yRand = CGFloat.random(in: -480...480)
-        apple.position = CGPoint(x: xRand, y: yRand)
+        apple!.position = CGPoint(x: xRand, y: yRand)
         snakeSections.append(newSnake)
         self.addChild(newSnake)
+        
+        currentScores = currentScores + 1
+        currentScore?.text = String(currentScores)
+        
+        if currentScores > highScores {
+            highScores = currentScores
+            highScore?.text = String(highScores)
+        }
+        else if highScores >= currentScores {
+            return
+        }
     }
     
     func initSwipeGestures(_ view: SKView) {
@@ -197,11 +218,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func restartGame() {
-
+        currentScores = 0
+        currentScore?.text = String(currentScores)
         self.removeChildren(in: snakeSections)
         lastSwiped = ""
         newSnake()
-        apple.position = CGPoint(x: 0, y: 0)
+        apple!.position = CGPoint(x: 0, y: 0)
     }
     
     func newSnake() {
@@ -225,4 +247,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         snakeSections[0].physicsBody?.contactTestBitMask = 15 // 1111
         snakeSections[0].physicsBody?.isDynamic = true
     }
+    
 }
