@@ -39,9 +39,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         currentScore = self.childNode(withName: "currentScore") as? SKLabelNode
         highScore = self.childNode(withName: "highScore") as? SKLabelNode
         
-        
-        currentScores = Int(currentScore!.text!)!
-        highScores = Int(highScore!.text!)!
+        currentScore?.text = NSString(format: "Score: %i", currentScores) as String
+        highScore?.text = NSString(format: "High Score: %i", UserDefaults().integer(forKey: "highScore")) as String
+        highScores = UserDefaults().integer(forKey: "highScore")
         
         newSnake()
         initSwipeGestures(view)
@@ -59,7 +59,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
  
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        
+
         
         let speed = 300.0
         let delta = currentTime - previousTime
@@ -82,22 +82,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             default:
                 tailFollow()
             }
-        }
-        else {
-            //when contact wall/itself, terminates game and restart
+        } else {
             restartGame()
             hasContacted = false
         }
         
+        
         if !addATail {
             return
-        }
-        else {
+        } else {
             hasEaten()
             addATail = false
         }
-        
-
         
  
         // use (320, 640) for snake head reappear
@@ -142,12 +138,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         snakeSections.last!.name = "Snake Tail"
         snakeSections.last!.physicsBody?.categoryBitMask = 2
         
+        
         currentScores = currentScores + 1
-        currentScore?.text = String(currentScores)
+        currentScore?.text = NSString(format: "Score: %i", currentScores) as String
+
         
         if currentScores > highScores {
             highScores = currentScores
-            highScore?.text = String(highScores)
+            highScore?.text = NSString(format: "High Score: %i", highScores) as String
+            UserDefaults.standard.setValue(highScores, forKey: "highScore")
+            UserDefaults.standard.synchronize()
+
         }
         else if highScores >= currentScores {
             return
@@ -223,7 +224,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func restartGame() {
         currentScores = 0
-        currentScore?.text = String(currentScores)
+        currentScore?.text = NSString(format: "Score: %i", currentScores) as String
         self.removeChildren(in: snakeSections)
         lastSwiped = ""
         newSnake()
@@ -253,3 +254,4 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
 }
+
