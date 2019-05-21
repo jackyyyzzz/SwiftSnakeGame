@@ -10,7 +10,6 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-
     
     var apple: SKSpriteNode?
     var snakeSections: [SKSpriteNode] = []
@@ -29,6 +28,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var highScores: Int = 0
     
     override func didMove(to view: SKView) {
+                
         self.physicsWorld.contactDelegate = self
         apple = self.childNode(withName: "Apple") as? SKSpriteNode
         apple!.physicsBody?.categoryBitMask = 2
@@ -47,6 +47,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         initSwipeGestures(view)
         
         
+        
         let border = SKPhysicsBody(edgeLoopFrom: gameFrame)
         border.categoryBitMask = 7 // 0111
         border.isDynamic = false
@@ -55,15 +56,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         view.showsPhysics = true
         print(snakeSections.count)
+        
+        
     }
  
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-
         
-        let speed = 300.0
+        let speed = 250.0
         let delta = currentTime - previousTime
         previousTime = currentTime
+        
         
         if !hasContacted {
             switch lastSwiped {
@@ -117,8 +120,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 print("Ate itself")
             }
         }
-        print(contact.bodyA)
-        print(contact.bodyB)
+        print(contact.bodyA.node!.name!)
+        print(contact.bodyB.node!.name!)
     }
     
     func hasEaten () {
@@ -245,6 +248,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             snakeSections.append(newSnake)
             self.addChild(newSnake)
         }
+        
         
         snakeSections[0].name = "Snake Head"
         snakeSections[0].color = .white

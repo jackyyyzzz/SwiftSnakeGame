@@ -12,6 +12,8 @@ import GameplayKit
 
 class GameViewController: UIViewController {
 
+    @IBOutlet var pauseBtn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,4 +49,13 @@ class GameViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
+    @IBAction func pauseBtn(_ sender: Any) {
+    }
+    
+    func resetGame() {
+        viewDidLoad()
+    }
+    
+
 }
