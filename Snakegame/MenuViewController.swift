@@ -21,7 +21,6 @@ class MenuViewController: UIViewController {
             let gvc = sb.instantiateViewController(withIdentifier: "Game")
             present(gvc, animated: true)
         }
-        self.dismiss(animated: false)
     }
 }
 
