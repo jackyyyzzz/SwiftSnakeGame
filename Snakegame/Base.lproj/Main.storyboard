@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZB4-Zj-UGi" userLabel="pauseBtn">
-                                <rect key="frame" x="76" y="712" width="53" height="36"/>
+                                <rect key="frame" x="67" y="712" width="53" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Pause">
@@ -27,20 +27,47 @@
                                 </state>
                                 <connections>
                                     <action selector="pauseBtn:" destination="BV1-FR-VrT" eventType="touchUpInside" id="f95-p9-b0o"/>
-                                    <segue destination="ZNl-Cf-t1o" kind="showDetail" id="LIf-aZ-QEx"/>
                                 </connections>
                             </button>
+                            <view hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bdm-jH-Lu7">
+                                <rect key="frame" x="67" y="334" width="240" height="162"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button hidden="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="72D-KE-JG6">
+                                        <rect key="frame" x="71" y="31" width="99" height="42"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="Continue"/>
+                                        <connections>
+                                            <action selector="continueBtn:" destination="BV1-FR-VrT" eventType="touchUpInside" id="nne-JY-lb9"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWi-Hf-ETM">
+                                        <rect key="frame" x="82" y="90" width="77" height="42"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="Restart"/>
+                                        <connections>
+                                            <action selector="restartBtn:" destination="BV1-FR-VrT" eventType="touchUpInside" id="YOk-ge-9C8"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.66799789669999998" green="0.47512125970000002" blue="0.25860109930000003" alpha="0.32726883561643838" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="4qk-I5-YsI"/>
                     </view>
                     <connections>
+                        <outlet property="continueBtn" destination="72D-KE-JG6" id="qTI-jW-86P"/>
                         <outlet property="pauseBtn" destination="ZB4-Zj-UGi" id="wjw-1i-dy0"/>
+                        <outlet property="pauseMenuPopUp" destination="Bdm-jH-Lu7" id="i9e-Mp-8tG"/>
+                        <outlet property="restartBtn" destination="hWi-Hf-ETM" id="vh1-e9-4LD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="778" y="672"/>
+            <point key="canvasLocation" x="776.79999999999995" y="671.67487684729065"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="BWk-4h-vaY">
@@ -51,7 +78,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QoC-T1-ZJ9">
-                                <rect key="frame" x="163.66666666666666" y="234" width="48" height="40"/>
+                                <rect key="frame" x="163" y="386" width="48" height="40"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                 <state key="normal" title="Start"/>
                                 <connections>
@@ -62,7 +89,7 @@
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="QoC-T1-ZJ9" firstAttribute="centerX" secondItem="wEu-YU-l6c" secondAttribute="centerX" id="r6Z-Qe-OT6"/>
-                            <constraint firstItem="QoC-T1-ZJ9" firstAttribute="centerY" secondItem="wEu-YU-l6c" secondAttribute="centerY" constant="-152" id="yBc-ep-yCh"/>
+                            <constraint firstItem="QoC-T1-ZJ9" firstAttribute="centerY" secondItem="wEu-YU-l6c" secondAttribute="centerY" id="yBc-ep-yCh"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="2gu-nB-Vbd"/>
                     </view>
@@ -70,44 +97,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qa5-Wb-EKD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="60" y="671.67487684729065"/>
-        </scene>
-        <!--Pause View Controller-->
-        <scene sceneID="3Qo-pJ-h55">
-            <objects>
-                <viewController storyboardIdentifier="PauseMenu" id="ZNl-Cf-t1o" customClass="PauseViewController" customModule="Snakegame" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="vcu-sS-4QI" customClass="SKView">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="72D-KE-JG6">
-                                <rect key="frame" x="151" y="299" width="73" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Continue"/>
-                                <connections>
-                                    <action selector="continueBtn:" destination="ZNl-Cf-t1o" eventType="touchUpInside" id="Mmk-Cn-qpI"/>
-                                    <action selector="continueBtn:" destination="bMX-13-kDK" eventType="touchUpInside" id="iCK-z4-aQd"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWi-Hf-ETM">
-                                <rect key="frame" x="158" y="372" width="59" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Restart"/>
-                                <connections>
-                                    <action selector="restartBtn:" destination="ZNl-Cf-t1o" eventType="touchUpInside" id="9gk-IW-AQb"/>
-                                    <action selector="restartBtn:" destination="bMX-13-kDK" eventType="touchUpInside" id="xbH-a0-ClW"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="MZc-t6-xRl"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LRj-gL-8IU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="bMX-13-kDK" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="1590" y="672"/>
         </scene>
     </scenes>
 </document>

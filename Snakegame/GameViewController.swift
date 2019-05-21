@@ -13,6 +13,10 @@ import GameplayKit
 class GameViewController: UIViewController {
 
     @IBOutlet var pauseBtn: UIButton!
+    @IBOutlet var continueBtn: UIButton!
+    @IBOutlet var restartBtn: UIButton!
+    
+    @IBOutlet var pauseMenuPopUp: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +31,14 @@ class GameViewController: UIViewController {
                 view.presentScene(scene)
             }
             
+            
             view.ignoresSiblingOrder = true
             
             view.showsFPS = true
             view.showsNodeCount = true
         }
+
+        
     }
 
     override var shouldAutorotate: Bool {
@@ -49,13 +56,53 @@ class GameViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-    @IBAction func pauseBtn(_ sender: Any) {
-    }
+
     
     func resetGame() {
         viewDidLoad()
     }
     
+    func pauseGame() {
+        let skView = self.view as! SKView
+        skView.scene?.isPaused = true
+    }
+    
+    func unpauseGame() {
+        let skView = self.view as! SKView
+        skView.scene?.isPaused = false
+    }
+    
+    func pauseMenu() {
+        pauseGame()
+        pauseBtn.isHidden = true
+        restartBtn.isHidden = true
+        pauseMenuPopUp.self.isHidden = false
+        continueBtn.isHidden = false
+        restartBtn.isHidden = false
+        
+    }
 
+    @IBAction func pauseBtn(_ sender: Any) {
+        pauseMenu()
+
+    }
+    
+    @IBAction func continueBtn(_ sender: Any) {
+        unpauseGame()
+        pauseMenuPopUp.self.isHidden = true
+        continueBtn.isHidden = true
+        restartBtn.isHidden = true
+        pauseBtn.isHidden = false
+    }
+    
+    
+    @IBAction func restartBtn(_ sender: Any) {
+        unpauseGame()
+        resetGame()
+        pauseMenuPopUp.self.isHidden = true
+        restartBtn.isHidden = true
+        continueBtn.isHidden = true
+        pauseBtn.isHidden = false
+        
+    }
 }

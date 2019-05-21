@@ -28,6 +28,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var highScores: Int = 0
     
     override func didMove(to view: SKView) {
+        
+        
                 
         self.physicsWorld.contactDelegate = self
         apple = self.childNode(withName: "Apple") as? SKSpriteNode
@@ -47,7 +49,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         initSwipeGestures(view)
         
         
-        
         let border = SKPhysicsBody(edgeLoopFrom: gameFrame)
         border.categoryBitMask = 7 // 0111
         border.isDynamic = false
@@ -63,25 +64,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
-        let speed = 250.0
-        let delta = currentTime - previousTime
-        previousTime = currentTime
-        
-        
         if !hasContacted {
             switch lastSwiped {
             case "right":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + CGFloat(speed * delta), y: snakeSections[0].position.y)
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x + 5, y: snakeSections[0].position.y)
             case "left":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - CGFloat(speed * delta), y: snakeSections[0].position.y)
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x - 5, y: snakeSections[0].position.y)
             case "up":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + CGFloat(speed * delta))
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y + 5)
             case "down":
                 tailFollow()
-                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - CGFloat(speed * delta))
+                snakeSections[0].position = CGPoint(x: snakeSections[0].position.x, y: snakeSections[0].position.y - 5)
             default:
                 tailFollow()
             }
