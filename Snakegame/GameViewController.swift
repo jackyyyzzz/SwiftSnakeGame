@@ -15,11 +15,13 @@ class GameViewController: UIViewController {
     @IBOutlet var pauseBtn: UIButton!
     @IBOutlet var continueBtn: UIButton!
     @IBOutlet var restartBtn: UIButton!
+    @IBOutlet var leaderboardBtn: UIButton!
     
     @IBOutlet var pauseMenuPopUp: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -79,6 +81,7 @@ class GameViewController: UIViewController {
         pauseMenuPopUp.self.isHidden = false
         continueBtn.isHidden = false
         restartBtn.isHidden = false
+        leaderboardBtn.isHidden = false
         
     }
 
@@ -92,6 +95,7 @@ class GameViewController: UIViewController {
         pauseMenuPopUp.self.isHidden = true
         continueBtn.isHidden = true
         restartBtn.isHidden = true
+        leaderboardBtn.isHidden = true
         pauseBtn.isHidden = false
     }
     
@@ -102,7 +106,15 @@ class GameViewController: UIViewController {
         pauseMenuPopUp.self.isHidden = true
         restartBtn.isHidden = true
         continueBtn.isHidden = true
+        leaderboardBtn.isHidden = true
         pauseBtn.isHidden = false
         
+    }
+    
+    @IBAction func leaderboardBtn(_ sender: Any) {
+        if let sb = self.storyboard {
+            let gvc = sb.instantiateViewController(withIdentifier: "Leaderboard")
+            present(gvc, animated: true)
+        }
     }
 }

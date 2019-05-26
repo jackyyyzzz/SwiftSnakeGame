@@ -21,6 +21,15 @@ class MenuViewController: UIViewController {
             let gvc = sb.instantiateViewController(withIdentifier: "Game")
             present(gvc, animated: true)
         }
+        
+        
+    }
+    
+    @IBAction func leaderboardBtn(_ sender: Any) {
+        if let sb = self.storyboard {
+            let gvc = sb.instantiateViewController(withIdentifier: "Leaderboard")
+            present(gvc, animated: true)
+        }
     }
 }
 

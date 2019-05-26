@@ -17,6 +17,7 @@
 		85910451227FE7C300EDC0A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85910450227FE7C300EDC0A2 /* Assets.xcassets */; };
 		8591045F227FE7C300EDC0A2 /* SnakegameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8591045E227FE7C300EDC0A2 /* SnakegameTests.swift */; };
 		8591046A227FE7C300EDC0A2 /* SnakegameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85910469227FE7C300EDC0A2 /* SnakegameUITests.swift */; };
+		85BF3260229A67A700C719AE /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BF325F229A67A700C719AE /* TableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		85910465227FE7C300EDC0A2 /* SnakegameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SnakegameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85910469227FE7C300EDC0A2 /* SnakegameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnakegameUITests.swift; sourceTree = "<group>"; };
 		8591046B227FE7C300EDC0A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85BF325F229A67A700C719AE /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				85910449227FE7C100EDC0A2 /* GameScene.swift */,
 				855B27C32293691A003010E3 /* MenuViewController.swift */,
 				8591044B227FE7C100EDC0A2 /* GameViewController.swift */,
+				85BF325F229A67A700C719AE /* TableViewController.swift */,
 				85910450227FE7C300EDC0A2 /* Assets.xcassets */,
 				85910455227FE7C300EDC0A2 /* Info.plist */,
 			);
@@ -269,6 +272,7 @@
 				8591044A227FE7C100EDC0A2 /* GameScene.swift in Sources */,
 				8591044C227FE7C100EDC0A2 /* GameViewController.swift in Sources */,
 				85910444227FE7C100EDC0A2 /* AppDelegate.swift in Sources */,
+				85BF3260229A67A700C719AE /* TableViewController.swift in Sources */,
 				855B27C42293691A003010E3 /* MenuViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

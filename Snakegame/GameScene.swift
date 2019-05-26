@@ -11,6 +11,8 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+
+    
     var apple: SKSpriteNode?
     var snakeSections: [SKSpriteNode] = []
     let gameFrame = CGRect(x: -250, y: -480, width: 500, height: 980)
@@ -29,7 +31,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         
-        
                 
         self.physicsWorld.contactDelegate = self
         apple = self.childNode(withName: "Apple") as? SKSpriteNode
@@ -40,12 +41,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         currentScore = self.childNode(withName: "currentScore") as? SKLabelNode
         highScore = self.childNode(withName: "highScore") as? SKLabelNode
+
         
         currentScore?.text = NSString(format: "Score: %i", currentScores) as String
         highScore?.text = NSString(format: "High Score: %i", UserDefaults().integer(forKey: "highScore")) as String
         highScores = UserDefaults().integer(forKey: "highScore")
         
-        newSnake()
+        
+        restartGame()
         initSwipeGestures(view)
         
         
@@ -94,7 +97,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addATail = false
         }
         
- 
+
+
         // use (320, 640) for snake head reappear
     
     }
@@ -168,6 +172,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         swipeDown.direction = .down
         view.addGestureRecognizer(swipeDown)
         
+        
     }
     
     @objc func swipedRight(sender: UISwipeGestureRecognizer) {
@@ -227,7 +232,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.removeChildren(in: snakeSections)
         lastSwiped = ""
         newSnake()
-        apple!.position = CGPoint(x: 0, y: 0)
+        let xRand = CGFloat.random(in: -229...229)
+        let yRand = CGFloat.random(in: -449...449)
+        apple!.position = CGPoint(x: xRand, y: yRand)
     }
     
     func newSnake() {
