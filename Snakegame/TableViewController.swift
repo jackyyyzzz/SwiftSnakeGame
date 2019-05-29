@@ -19,9 +19,6 @@ class ScoreViewController: UIViewController {
     @IBOutlet var secondScore: UILabel!
     @IBOutlet var thirdScore: UILabel!
     
-    @IBOutlet var newHighScoreWinner: UIView!
-    @IBOutlet var newWinnerInput: UITextField!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,15 +31,6 @@ class ScoreViewController: UIViewController {
         secondScore?.text = String(UserDefaults().integer(forKey: "secondHighScore"))
         thirdScore?.text = String(UserDefaults().integer(forKey: "thirdHighScore"))
         
-        if firstName?.text == "You" {
-            newHighScoreWinner.isHidden = false
-        }
-        else if secondName?.text == "You" {
-            newHighScoreWinner.isHidden = false
-        }
-        else if thirdName?.text == "You" {
-            newHighScoreWinner.isHidden = false
-        }
     }
     
     
@@ -52,24 +40,4 @@ class ScoreViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func newWinnerTxt(_ sender: UITextField) {
-        if firstName?.text == "You" {
-            firstName?.text = newWinnerInput.text
-            UserDefaults.standard.setValue(firstName.text, forKey: "firstHigh")
-        }
-        else if secondName?.text == "You" {
-            secondName?.text = newWinnerInput.text
-            UserDefaults.standard.setValue(secondName.text, forKey: "secondHigh")
-        }
-        else if thirdName?.text == "You" {
-            thirdName?.text = newWinnerInput.text
-            UserDefaults.standard.setValue(thirdName.text, forKey: "thirdHigh")
-        }
-        newHighScoreWinner.isHidden = true
-        UserDefaults.standard.synchronize()
-        sender.resignFirstResponder()
-    }
 }
-
-
-//make newHighScoreWinner able to input into new winner

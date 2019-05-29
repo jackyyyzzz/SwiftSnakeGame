@@ -16,8 +16,10 @@ class GameViewController: UIViewController {
     @IBOutlet var continueBtn: UIButton!
     @IBOutlet var restartBtn: UIButton!
     @IBOutlet var leaderboardBtn: UIButton!
+    @IBOutlet var mainMenuBtn: UIButton!
     
     @IBOutlet var pauseMenuPopUp: UIView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +44,6 @@ class GameViewController: UIViewController {
 
         
     }
-    
     
     override var shouldAutorotate: Bool {
         return true
@@ -81,6 +82,7 @@ class GameViewController: UIViewController {
         pauseMenuPopUp.self.isHidden = false
         continueBtn.isHidden = false
         restartBtn.isHidden = false
+        mainMenuBtn.isHidden = false
     }
 
     @IBAction func pauseBtn(_ sender: Any) {
@@ -117,5 +119,9 @@ class GameViewController: UIViewController {
         }
     }
     
+    
+    @IBAction func mainMenuBtn(_ sender: Any) {
+        dismiss(animated: true)
+    }
     
 }

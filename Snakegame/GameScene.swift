@@ -288,7 +288,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     thirdHighScoreWinner = secondHighScoreWinner
                     secondHighScoreWinner = firstHighScoreWinner
-                    firstHighScoreWinner = "You"
+                    firstHighScoreWinner = UserDefaults().string(forKey: "currentPlayer") ?? "New Player"
                     
                     UserDefaults.standard.setValue(thirdHighScoreWinner, forKey: "thirdHigh")
                     UserDefaults.standard.setValue(secondHighScoreWinner, forKey: "secondHigh")
@@ -304,7 +304,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     secondHighScores = currentScores
                     
                     thirdHighScoreWinner = secondHighScoreWinner
-                    secondHighScoreWinner = "You"
+                    secondHighScoreWinner = UserDefaults().string(forKey: "currentPlayer") ?? "New Player"
                     
                     UserDefaults.standard.setValue(thirdHighScoreWinner, forKey: "thirdHigh")
                     UserDefaults.standard.setValue(secondHighScoreWinner, forKey: "secondHigh")
@@ -316,7 +316,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             else{
                 thirdHighScores = currentScores
-                thirdHighScoreWinner = "You"
+                thirdHighScoreWinner = UserDefaults().string(forKey: "currentPlayer") ?? "New Player"
                 
                 UserDefaults.standard.setValue(thirdHighScoreWinner, forKey: "thirdHigh")
                 
