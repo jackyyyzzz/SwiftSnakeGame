@@ -8,6 +8,7 @@
 
 import SpriteKit
 import GameplayKit
+import UIKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -25,9 +26,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var highScore: SKLabelNode?
     
     var previousTime: Double = 0
+  
+    //leaderboard vars
+    var firstHighScoreWinner = "First"
+    var secondHighScoreWinner = "Second"
+    var thirdHighScoreWinner = "Third"
     
     var currentScores: Int = 0
-    var highScores: Int = 0
+    var firstHighScores: Int = 0
+    var secondHighScores: Int = 0
+    var thirdHighScores: Int = 0
     
     override func didMove(to view: SKView) {
         
@@ -44,8 +52,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         
         currentScore?.text = NSString(format: "Score: %i", currentScores) as String
-        highScore?.text = NSString(format: "High Score: %i", UserDefaults().integer(forKey: "highScore")) as String
-        highScores = UserDefaults().integer(forKey: "highScore")
+        highScore?.text = NSString(format: "High Score: %i", UserDefaults().integer(forKey: "firstHighScore")) as String
+        
+        
+        //update leaderboard
+        firstHighScoreWinner = UserDefaults().string(forKey: "firstHigh") ?? "Player"
+        secondHighScoreWinner = UserDefaults().string(forKey: "secondHigh") ?? "Player"
+        thirdHighScoreWinner = UserDefaults().string(forKey: "thirdHigh") ?? "Player"
+        firstHighScores = UserDefaults().integer(forKey: "firstHighScore")
+        secondHighScores = UserDefaults().integer(forKey: "secondHighScore")
+        thirdHighScores = UserDefaults().integer(forKey: "thirdHighScore")
         
         
         restartGame()
@@ -59,8 +75,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsBody?.node?.name = "Wall"
         
         view.showsPhysics = true
-        print(snakeSections.count)
-        
+
         
     }
  
@@ -146,14 +161,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         currentScore?.text = NSString(format: "Score: %i", currentScores) as String
 
         
-        if currentScores > highScores {
-            highScores = currentScores
-            highScore?.text = NSString(format: "High Score: %i", highScores) as String
-            UserDefaults.standard.setValue(highScores, forKey: "highScore")
-            UserDefaults.standard.synchronize()
-
+        if currentScores > firstHighScores {
+            highScore?.text = NSString(format: "High Score: %i", currentScores) as String
         }
-        else if highScores >= currentScores {
+        else if currentScores <= firstHighScores {
             return
         }
     }
@@ -227,6 +238,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func restartGame() {
+        checkNewHighScore()
         currentScores = 0
         currentScore?.text = NSString(format: "Score: %i", currentScores) as String
         self.removeChildren(in: snakeSections)
@@ -235,6 +247,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let xRand = CGFloat.random(in: -229...229)
         let yRand = CGFloat.random(in: -449...449)
         apple!.position = CGPoint(x: xRand, y: yRand)
+
     }
     
     func newSnake() {
@@ -260,5 +273,59 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     }
     
+    func checkNewHighScore() {
+        if currentScores < thirdHighScores {
+            return
+        }
+        else if currentScores >= thirdHighScores {
+            if currentScores > secondHighScores {
+                if currentScores > firstHighScores{
+                    thirdHighScores = secondHighScores
+                    secondHighScores = firstHighScores
+                    firstHighScores = currentScores
+                    
+                    highScore?.text = NSString(format: "High Score: %i", currentScores) as String
+                    
+                    thirdHighScoreWinner = secondHighScoreWinner
+                    secondHighScoreWinner = firstHighScoreWinner
+                    firstHighScoreWinner = "You"
+                    
+                    UserDefaults.standard.setValue(thirdHighScoreWinner, forKey: "thirdHigh")
+                    UserDefaults.standard.setValue(secondHighScoreWinner, forKey: "secondHigh")
+                    UserDefaults.standard.setValue(firstHighScoreWinner, forKey: "firstHigh")
+                    
+                    UserDefaults.standard.setValue(firstHighScores, forKey: "firstHighScore")
+                    UserDefaults.standard.setValue(secondHighScores, forKey: "secondHighScore")
+                    UserDefaults.standard.setValue(thirdHighScores, forKey: "thirdHighScore")
+                    UserDefaults.standard.synchronize()
+                }
+                else{
+                    thirdHighScores = secondHighScores
+                    secondHighScores = currentScores
+                    
+                    thirdHighScoreWinner = secondHighScoreWinner
+                    secondHighScoreWinner = "You"
+                    
+                    UserDefaults.standard.setValue(thirdHighScoreWinner, forKey: "thirdHigh")
+                    UserDefaults.standard.setValue(secondHighScoreWinner, forKey: "secondHigh")
+                    
+                    UserDefaults.standard.setValue(secondHighScores, forKey: "secondHighScore")
+                    UserDefaults.standard.setValue(thirdHighScores, forKey: "thirdHighScore")
+                    UserDefaults.standard.synchronize()
+                }
+            }
+            else{
+                thirdHighScores = currentScores
+                thirdHighScoreWinner = "You"
+                
+                UserDefaults.standard.setValue(thirdHighScoreWinner, forKey: "thirdHigh")
+                
+                UserDefaults.standard.setValue(thirdHighScores, forKey: "thirdHighScore")
+                UserDefaults.standard.synchronize()
+            }
+        }
+    }
+    
 }
 
+//make newHighSCorewinner pop up when there is a new highscore

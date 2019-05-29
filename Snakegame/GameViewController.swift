@@ -11,7 +11,7 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
-
+    
     @IBOutlet var pauseBtn: UIButton!
     @IBOutlet var continueBtn: UIButton!
     @IBOutlet var restartBtn: UIButton!
@@ -42,7 +42,8 @@ class GameViewController: UIViewController {
 
         
     }
-
+    
+    
     override var shouldAutorotate: Bool {
         return true
     }
@@ -77,12 +78,9 @@ class GameViewController: UIViewController {
     func pauseMenu() {
         pauseGame()
         pauseBtn.isHidden = true
-        restartBtn.isHidden = true
         pauseMenuPopUp.self.isHidden = false
         continueBtn.isHidden = false
         restartBtn.isHidden = false
-        leaderboardBtn.isHidden = false
-        
     }
 
     @IBAction func pauseBtn(_ sender: Any) {
@@ -95,7 +93,6 @@ class GameViewController: UIViewController {
         pauseMenuPopUp.self.isHidden = true
         continueBtn.isHidden = true
         restartBtn.isHidden = true
-        leaderboardBtn.isHidden = true
         pauseBtn.isHidden = false
     }
     
@@ -106,15 +103,19 @@ class GameViewController: UIViewController {
         pauseMenuPopUp.self.isHidden = true
         restartBtn.isHidden = true
         continueBtn.isHidden = true
-        leaderboardBtn.isHidden = true
         pauseBtn.isHidden = false
         
     }
     
     @IBAction func leaderboardBtn(_ sender: Any) {
+        pauseGame()
+        pauseMenu()
+        pauseBtn.isHidden = true
         if let sb = self.storyboard {
             let gvc = sb.instantiateViewController(withIdentifier: "Leaderboard")
             present(gvc, animated: true)
         }
     }
+    
+    
 }
