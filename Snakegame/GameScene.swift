@@ -32,6 +32,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var secondHighScoreWinner = "Second"
     var thirdHighScoreWinner = "Third"
     
+    var highScorePlayers: [String] = []
+    var highScorePoints: [Int] = []
+    
     var currentScores: Int = 0
     var firstHighScores: Int = 0
     var secondHighScores: Int = 0
@@ -322,10 +325,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 UserDefaults.standard.setValue(thirdHighScores, forKey: "thirdHighScore")
                 UserDefaults.standard.synchronize()
-            }
+                            }
         }
     }
     
 }
-
-//make newHighSCorewinner pop up when there is a new highscore

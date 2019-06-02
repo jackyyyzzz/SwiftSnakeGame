@@ -23,26 +23,18 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "GameScene") {
                 // Set the scale mode to scale to fit the window
                 scene.scaleMode = .aspectFill
-                
                 // Present the scene
                 view.presentScene(scene)
             }
-            
-            
             view.ignoresSiblingOrder = true
-            
             view.showsFPS = true
             view.showsNodeCount = true
         }
-
-        
     }
     
     override var shouldAutorotate: Bool {
@@ -87,7 +79,6 @@ class GameViewController: UIViewController {
 
     @IBAction func pauseBtn(_ sender: Any) {
         pauseMenu()
-
     }
     
     @IBAction func continueBtn(_ sender: Any) {
@@ -109,6 +100,11 @@ class GameViewController: UIViewController {
         
     }
     
+    @IBAction func mainMenuBtn(_ sender: Any) {
+        dismiss(animated: true)
+    }
+    
+    
     @IBAction func leaderboardBtn(_ sender: Any) {
         pauseGame()
         pauseMenu()
@@ -118,10 +114,4 @@ class GameViewController: UIViewController {
             present(gvc, animated: true)
         }
     }
-    
-    
-    @IBAction func mainMenuBtn(_ sender: Any) {
-        dismiss(animated: true)
-    }
-    
 }

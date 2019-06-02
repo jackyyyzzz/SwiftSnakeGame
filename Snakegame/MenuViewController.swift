@@ -19,6 +19,8 @@ class MenuViewController: UIViewController {
     
     @IBOutlet var newPlayerBtn: UIButton!
     
+    @IBOutlet var startBtn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         currentPlayerNameLbl.text = UserDefaults().string(forKey: "currentPlayer") ?? "Player Name"
@@ -38,12 +40,15 @@ class MenuViewController: UIViewController {
         playerNameEntry.isHidden = true
         newPlayerBtn.isHidden = false
         sender.resignFirstResponder()
+        startBtn.isHidden = false
     }
     
 
     @IBAction func newPlayerBtn(_ sender: Any) {
         playerNameEntry.isHidden = false
         newPlayerBtn.isHidden = true
+        newPlayerInput.becomeFirstResponder()
+        startBtn.isHidden = true
     }
     
     
